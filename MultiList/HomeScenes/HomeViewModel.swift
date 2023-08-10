@@ -35,8 +35,6 @@ class HomeViewModel: ObservableObject {
                     self.title = remoteConfig["title"].stringValue ?? ""
                     self.message = remoteConfig["message"].stringValue ?? ""
                     self.isShowingAlert = remoteConfig["isShowingAlert"].boolValue
-                    
-                    print(self.isShowingAlert)
                 }
             }
         } catch let error {

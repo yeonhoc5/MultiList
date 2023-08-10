@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>12354918139-g5umi720gjkdrd6vsa2cj9e4u5hg9hfg.apps.googleusercontent.com</string>
+	<string>465955678123-m30mtatg3c96htgdabnt8c6mjcuk7jjc.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.12354918139-g5umi720gjkdrd6vsa2cj9e4u5hg9hfg</string>
+	<string>com.googleusercontent.apps.465955678123-m30mtatg3c96htgdabnt8c6mjcuk7jjc</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDI1yOrjkmn9noUqe8KCeeX1LEkG_XsOF8</string>
+	<string>AIzaSyAkvlssASo4PnzIbAxLG6zschpCPU_OqZI</string>
 	<key>GCM_SENDER_ID</key>
-	<string>12354918139</string>
+	<string>465955678123</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>yeonhoc5.MultiList</string>
 	<key>PROJECT_ID</key>
-	<string>multilist-87945</string>
+	<string>multilist-ce31f</string>
 	<key>STORAGE_BUCKET</key>
-	<string>multilist-87945.appspot.com</string>
+	<string>multilist-ce31f.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,8 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:12354918139:ios:2c101b5371f51020ea825e</string>
-	<key>DATABASE_URL</key>
-	<string>https://multilist-87945-default-rtdb.firebaseio.com</string>
+	<string>1:465955678123:ios:a3ec04cf43bc5e8b07d4ee</string>
 </dict>
 </plist>

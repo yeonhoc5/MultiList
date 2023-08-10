@@ -12,137 +12,226 @@ import GoogleSignIn
 import AuthenticationServices
 import SwiftUI
 import CryptoKit
+import KakaoSDKUser
 
 
 
 class LoginViewModel: ObservableObject {
     
     @Published var isLoggedIn: Bool = false
-    var loggedInID: String = ""
-    var loggedInName: String = ""
-    var loginType: Int = 0
-    var errorMessage: String = ""
-    
-    var currentNonce: String?
     
     // 0: not / 1: 익명 / 2: 구글 / 3: 네이버 / 4: 카카오 / 5: 애플
+    var loginType: Int = 0
+    
+    var loggedInID: String = ""
+    var loggedInName: String = ""
+    
+    // 애플 로그인은 처음 가입할 때만 이름을 주기 때문에 따로 저장
+    var appleIDName: String = ""
+    // 애플 로그인에 사용
+    var currentNonce: String!
+    
+    var errorMessage: String = ""
     
     init() {
-        loginCheck()
+        loadPreviousUser()
     }
     
-    func loginCheck() {
-        let userDefault = UserDefaults.standard
-        loginType = userDefault.integer(forKey: "loginType")
-        
-        switch loginType {
-        case 1: loginAnonymously()
-        case 2: loginWithGoogle()
-        case 3: loginWithNaver()
-        case 4: loginWithKakao()
-        case 5: loginWithApple()
-        default: break
+    func loadPreviousUser() {
+        if let user = Auth.auth().currentUser {
+            let userDefaults = UserDefaults.standard
+            let type = userDefaults.integer(forKey: "loginType")
+            let uid = user.uid
+            let name = userDefaults.string(forKey: "userName") ?? "anyway"
+            
+            completeLogin(type: type, id: uid, name: name, autoLogin: true)
         }
     }
     
-    
+    // 0. 익명 로그인
     func loginAnonymously() {
         Auth.auth().signInAnonymously { [weak self] result, error in
             guard let self = self else { return }
             if let id = result?.user.uid, error == nil {
-                self.loginType = 1
-                self.loggedInName = "손"
-                self.loggedInID = id
-                self.saveIDinDevice(id: id, type: self.loginType)
+                self.completeLogin(type: 0, id: id, name: "익명의 손")
             } else {
-                self.errorMessage = error?.localizedDescription ?? "Error"
+                self.errorMessage = error?.localizedDescription ?? "익명 로그인 중 Error가 발생했습니다."
             }
-            
         }
     }
     
+    // 1. 구글 로그인
     func loginWithGoogle() {
+        guard let clientID = FirebaseApp.app()?.options.clientID else { return }
+        guard let presentingViewcontroller = (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first?.rootViewController else {
+            return
+        }
         
-//        if token != nil {
-        if self.loginType == 2 {
-//            Auth.auth().signIn(withCustomToken: token) { result, error in
-//                if let error = error {
-//                    print("Firebase sign in error: \(error)")
-//                    return
-//                } else {
-//                    self.loggedInID = result?.user.uid ?? ""
-//                    self.loggedInName = result?.user.displayName ?? "손"
-//                    self.loginType = 2
-//                    self.saveIDinDevice(id: self.loggedInID, type: self.loginType)
-//                    print("User is signed with Firebase & Google")
-//                }
-//            }
-        } else {
-            guard let clientID = FirebaseApp.app()?.options.clientID else { return }
-            guard let presentingViewcontroller = (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first?.rootViewController else {
-                return
-            }
-            
-            let config = GIDConfiguration(clientID: clientID)
-            
-            GIDSignIn.sharedInstance.configuration = config
-            GIDSignIn.sharedInstance.signIn(withPresenting: presentingViewcontroller) { result, error in
-                guard error == nil else { return }
-                
+        let config = GIDConfiguration(clientID: clientID)
+        
+        GIDSignIn.sharedInstance.configuration = config
+        GIDSignIn.sharedInstance.signIn(withPresenting: presentingViewcontroller) { result, error in
+            guard error == nil else { return }
+            if error == nil {
                 guard let user = result?.user,
                       let token = user.idToken?.tokenString else { return }
                 let credential = GoogleAuthProvider.credential(withIDToken: token, accessToken: user.accessToken.tokenString)
                 
                 Auth.auth().signIn(with: credential) { authResult, error in
-                    if let error = error {
-                        print("Firebase sign in error: \(error)")
-                        return
+                    if error == nil {
+                        self.completeLogin(type: 1, id: authResult?.user.uid ?? "google Login", name: user.profile?.name ?? "손")
                     } else {
-                        self.loggedInID = authResult?.user.uid ?? ""
-                        self.loggedInName = user.profile?.name ?? ""
-                        self.loginType = 2
-                        self.saveIDinDevice(id: self.loggedInID, type: self.loginType)
-                        print("User is signed with Firebase & Google")
+                        self.errorMessage = error?.localizedDescription ?? "로그인 중 Error가 발생했습니다."
+                    }
+                }
+            } else {
+                self.errorMessage = error?.localizedDescription ?? "구글 로그인 중 Error가 발생했습니다."
+            }
+            
+        }
+    }
+    
+    // 2. 네이버 로그인
+    func loginWithNaver() {
+        let email = "aa"
+        let userName = "bb"
+        let password = "pa"
+        loginWithEmail(email: email, userName: userName, password: password) {
+            
+        }
+    }
+    
+    // 3. 카카오 로그인
+    func loginWithKakao() {
+        
+        var email: String!
+        var userName: String!
+        var password: String!
+        
+        
+        
+        if (UserApi.isKakaoTalkLoginAvailable()) {
+            UserApi.shared.loginWithKakaoTalk {(oauthToken, error) in
+                
+                guard let token = oauthToken?.idToken else { return }
+//                let provider = OAuthProvider(providerID: "oidc.kakao")
+                
+                let credential = OAuthProvider.credential(withProviderID: "oidc.kakao", idToken: token, accessToken: oauthToken?.accessToken)
+                
+                Auth.auth().signIn(with: credential) { result, error in
+                    if error != nil {
+                        self.errorMessage = "카카오 로그인 중 Error가 발생했습니다."
+                    } else {
+                        UserApi.shared.me { user, error in
+                            if let account = user?.kakaoAccount,
+                               error == nil {
+                                email = account.email
+                                userName = account.profile?.nickname
+                                
+                                Auth.auth().signIn(withCustomToken: oauthToken?.accessToken ?? "") { result, error in
+                                    self.loginType = 3
+                                    self.loggedInID = email
+                                    self.loggedInName = userName
+                                    withAnimation {
+                                        self.isLoggedIn = true
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
     }
     
-    func loginWithNaver() {
-        
+    // 5. ID / 패스워드 로그인 (네이버 / 카카오 로그인 처리)
+    func loginWithEmail(email: String, userName: String, password: String, completion: (() -> Void)?) {
+        Auth.auth().createUser(withEmail: email, password: password) { result, error in
+            if let error = error {
+                print("error: \(error.localizedDescription)")
+            }
+            if result != nil {
+                let changeRequest = Auth.auth().currentUser?.createProfileChangeRequest()
+                changeRequest?.displayName = userName
+                print("사용자 이메일: \(String(describing: result?.user.email))")
+            }
+            completion?()
+        }
     }
     
-    func loginWithKakao() {
-        
-    }
-    
-    func loginWithApple() {
-        let nonce = randomNonceString()
-        currentNonce = nonce
-        let appleIDProvider = ASAuthorizationAppleIDProvider()
-        let request = appleIDProvider.createRequest()
+    func handleRequest(request: ASAuthorizationAppleIDRequest, result: @escaping (ASAuthorizationAppleIDRequest) -> Void) -> Void {
+        self.randomNonceString()
         request.requestedScopes = [.fullName, .email]
-        request.nonce = sha256(nonce)
-          
-        let authorizationController = ASAuthorizationController(authorizationRequests: [request])
-  //      authorizationController.delegate = self
-        authorizationController.performRequests()
+        request.nonce = self.sha256(currentNonce)
+        result(request)
+    }
+    
+    func loginWithApple(result: Result<ASAuthorization, Error>, completion: @escaping () -> Void) {
+        switch result {
+        case .success(let authResults):
+            switch authResults.credential {
+            case let appleIDCredential as ASAuthorizationAppleIDCredential:
+                
+                var fullName = "appleID"
+                if let familyName = appleIDCredential.fullName?.familyName,
+                   let givenName = appleIDCredential.fullName?.givenName {
+                    fullName = familyName + givenName
+                } else {
+                    let userDefaults = UserDefaults.standard
+                    if let name = userDefaults.string(forKey: "appleIDName") {
+                        fullName = name
+                    }
+                }
+                
+                guard let nonce = self.currentNonce else {
+                    fatalError("Invalid state: A login callback was received, but no login request was sent.")
+                }
+                guard let appleIDToken = appleIDCredential.identityToken else {
+                    fatalError("Invalid state: A login callback was received, but no login request was sent.")
+                }
+                guard let idTokenString = String(data: appleIDToken, encoding: .utf8) else {
+                    print("Unable to serialize token string from data: \(appleIDToken.debugDescription)")
+                    return
+                }
+
+                //Creating a request for firebase
+                let credential = OAuthProvider.credential(withProviderID: "apple.com", idToken: idTokenString, rawNonce: nonce)
+
+                //Sending Request to Firebase
+                Auth.auth().signIn(with: credential) { (authResult, error) in
+                    if (error != nil) {
+                        // Error. If error.code == .MissingOrInvalidNonce, make sure
+                        // you're sending the SHA256-hashed nonce as a hex string with
+                        // your request to Apple.
+                        print(error?.localizedDescription as Any)
+                        return
+                    } else {
+                        self.completeLogin(type: 5, id: authResult?.user.uid ?? "apple Login", name: fullName)
+                    }
+                }
+                //Prints the current userID for firebase
+                print("\(String(describing: Auth.auth().currentUser?.uid))")
+                default:
+                    break
+                }
+            default:
+                break
+        }
+        completion()
     }
     
     
-    
+    // 10. 로그아웃 (통합)
     func logout(completion: @escaping () -> Void) {
         do {
             let user = Auth.auth().currentUser
-            if self.loginType == 1 {
+            if user?.isAnonymous == true {
                 user?.delete(completion: { error in
                     if error != nil {
                         self.errorMessage = String(error?.localizedDescription ?? "")
                         print(self.errorMessage)
                     } else {
                         self.loginType = 0
-                        
                         let userDefaults = UserDefaults.standard
                         userDefaults.removeObject(forKey: "loginType")
                         print("Anonymous User deleted")
@@ -164,13 +253,29 @@ class LoginViewModel: ObservableObject {
         
     }
     
-    func saveIDinDevice(id: String, type: Int) {
+    
+    func completeLogin(type: Int, id: String, name: String, autoLogin: Bool = false) {
+        self.loginType = type
+        self.loggedInID = id
+        self.loggedInName = name
         withAnimation {
             isLoggedIn = true
         }
+        if !autoLogin {
+            DispatchQueue.main.async {
+                self.saveIDinDevice(type: type, uid: id, name: name)
+            }
+        }
+    }
+    
+    func saveIDinDevice(type: Int, uid: String, name: String) {
         let userDefault = UserDefaults.standard
-        userDefault.set(id, forKey: "userID")
         userDefault.set(type, forKey: "loginType")
+        userDefault.set(uid, forKey: "userID")
+        userDefault.set(name, forKey: "userName")
+        if type == 5 {
+            userDefault.set(name, forKey: "appleIDName")
+        }
         if userDefault.string(forKey: "userID") == loggedInID,
            userDefault.integer(forKey: "loginType") == self.loginType {
             print("save Success")
@@ -182,7 +287,7 @@ class LoginViewModel: ObservableObject {
 
 extension LoginViewModel {
     
-    func randomNonceString(length: Int = 32) -> String {
+    func randomNonceString(length: Int = 32) {
       precondition(length > 0)
       var randomBytes = [UInt8](repeating: 0, count: length)
       let errorCode = SecRandomCopyBytes(kSecRandomDefault, randomBytes.count, &randomBytes)
@@ -199,8 +304,7 @@ extension LoginViewModel {
         // Pick a random character from the set, wrapping around if needed.
         charset[Int(byte) % charset.count]
       }
-
-      return String(nonce)
+        self.currentNonce = String(nonce)
     }
 
     func sha256(_ input: String) -> String {
@@ -212,52 +316,6 @@ extension LoginViewModel {
 
       return hashString
     }
-
-//    func authorizationController(controller: ASAuthorizationController, didCompleteWithAuthorization authorization: ASAuthorization) {
-//        if let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential {
-//          guard let nonce = currentNonce else {
-//            fatalError("Invalid state: A login callback was received, but no login request was sent.")
-//          }
-//          guard let appleIDToken = appleIDCredential.identityToken else {
-//            print("Unable to fetch identity token")
-//            return
-//          }
-//          guard let idTokenString = String(data: appleIDToken, encoding: .utf8) else {
-//            print("Unable to serialize token string from data: \(appleIDToken.debugDescription)")
-//            return
-//          }
-//          // Initialize a Firebase credential, including the user's full name.
-//          let credential = OAuthProvider.appleCredential(withIDToken: idTokenString,
-//                                                            rawNonce: nonce,
-//                                                            fullName: appleIDCredential.fullName)
-//          // Sign in with Firebase.
-//          Auth.auth().signIn(with: credential) { (authResult, error) in
-//            if error != nil {
-//              // Error. If error.code == .MissingOrInvalidNonce, make sure
-//              // you're sending the SHA256-hashed nonce as a hex string with
-//              // your request to Apple.
-//              print(error?.localizedDescription)
-//              return
-//            } else {
-//                self.loginType = 5
-//                self.loggedInID = authResult?.user.uid ?? "얼라라"
-//                self.loggedInName = authResult?.user.displayName ?? "얼라"
-//                self.saveIDinDevice(id: self.loggedInID, type: self.loginType)
-//                print("User is signed with Firebase & Google")
-//            // User is signed in to Firebase with Apple.
-//            // ...
-//          }
-//        }
-//      }
-//
-//      func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
-//        // Handle error.
-//        print("Sign in with Apple errored: \(error)")
-//      }
-//
-//    }
-    
-    
 }
 
 

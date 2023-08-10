@@ -30,7 +30,7 @@ struct LoginView: View {
                     .onAppear {
                         isLoggedin = viewModel.isLoggedIn
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                            self.isShowingMessage = viewModel.isLoggedIn
+                            self.isShowingMessage = false
                             self.messageHome = ""
                         }
                     }
@@ -100,9 +100,7 @@ extension LoginView {
                 GeometryReader { proxy in
                     HStack(spacing: 20) {
                         buttonLogin(title: "G", btncolor: .white, textColor: .black) {
-    //                        DispatchQueue.main.async {
-                                self.isShowingProgressView = true
-    //                        }
+                            self.isShowingProgressView = true
                             viewModel.loginWithGoogle()
                         }
                         buttonLogin(title: "N", btncolor: .green, textColor: .white) {
@@ -113,8 +111,9 @@ extension LoginView {
                             viewModel.loginWithKakao()
                             self.isShowingProgressView = true
                         }
-                        SigninWithAppleID(viewModel: viewModel)
-                            .frame(width: (proxy.size.width - 70) / 4, height: proxy.size.height)
+                        buttonLoginApple()
+                            .frame(width: (proxy.size.width - 60) / 4,
+                                   height: proxy.size.height)
                             .clipped()
                             .cornerRadius(5)
                             .shadow(color: .white, radius: 0.2, x: 0, y: 0)
@@ -151,6 +150,8 @@ extension LoginView {
     }
 }
 
+
+// MARK: - [extension] 버튼
 extension LoginView {
     func buttonLogin(title: String, btncolor: Color = .teal, textColor: Color = .white, login: @escaping(() -> Void)) -> some View {
         Button {
@@ -166,11 +167,25 @@ extension LoginView {
         }
         .buttonStyle(ScaleEffect(scale: 0.9))
     }
+    
+    func buttonLoginApple() -> some View {
+        ZStack {
+            Color.black
+            SignInWithAppleButton(.continue) { request in
+                viewModel.handleRequest(request: request) { _ in
+                }
+            } onCompletion: { result in
+                self.viewModel.loginWithApple(result: result) {
+                }
+            }
+            .frame(width: 100, height: 70)
+        }
+    }
 }
 
 
 struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
-        LoginView(isLoggedin: .constant(true))
+        LoginView(isLoggedin: .constant(false))
     }
 }

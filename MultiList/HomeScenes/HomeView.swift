@@ -17,7 +17,7 @@ struct HomeView: View {
             VStack {
                 LoginView(isLoggedin: $viewModel.isLoggedIn)
                     .alert(viewModel.title,
-                           isPresented: $viewModel.isLoggedIn) {
+                           isPresented: .constant(false)) {
                     } message: {
                         Text(viewModel.message)
                     }
