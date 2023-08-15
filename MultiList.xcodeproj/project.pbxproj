@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A4E7F7B2A89C4680009D0B6 /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A4E7F7A2A89C4680009D0B6 /* ColorExtension.swift */; };
+		1A4E7F7E2A8B19120009D0B6 /* DetectOrientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A4E7F7D2A8B19120009D0B6 /* DetectOrientation.swift */; };
+		1A4E7F802A8B28620009D0B6 /* OrientationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A4E7F7F2A8B28620009D0B6 /* OrientationView.swift */; };
+		1A4E7F822A8B5F8B0009D0B6 /* helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A4E7F812A8B5F8B0009D0B6 /* helper.swift */; };
 		1A704C652A806FE800CBEF26 /* MultiListApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A704C642A806FE800CBEF26 /* MultiListApp.swift */; };
 		1A704C672A806FE800CBEF26 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A704C662A806FE800CBEF26 /* ContentView.swift */; };
 		1A704C692A806FE800CBEF26 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A704C682A806FE800CBEF26 /* Assets.xcassets */; };
@@ -29,9 +33,17 @@
 		1A8412542A82571800BD1BF5 /* KakaoSDKShare in Frameworks */ = {isa = PBXBuildFile; productRef = 1A8412532A82571800BD1BF5 /* KakaoSDKShare */; };
 		1A8412562A82571800BD1BF5 /* KakaoSDKUser in Frameworks */ = {isa = PBXBuildFile; productRef = 1A8412552A82571800BD1BF5 /* KakaoSDKUser */; };
 		1A84125B2A84937700BD1BF5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1A84125A2A84937700BD1BF5 /* GoogleService-Info.plist */; };
+		1A84125C2A84D22B00BD1BF5 /* Pods_MultiList.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5DA7AE246DE9064DFE79F85 /* Pods_MultiList.framework */; };
+		1A8412602A860C1300BD1BF5 /* UserSettingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A84125F2A860C1300BD1BF5 /* UserSettingView.swift */; };
+		1A8412632A860C3A00BD1BF5 /* UserSettingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A8412622A860C3A00BD1BF5 /* UserSettingViewModel.swift */; };
+		1A8412652A860D8300BD1BF5 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A8412642A860D8300BD1BF5 /* UserModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1A4E7F7A2A89C4680009D0B6 /* ColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
+		1A4E7F7D2A8B19120009D0B6 /* DetectOrientation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetectOrientation.swift; sourceTree = "<group>"; };
+		1A4E7F7F2A8B28620009D0B6 /* OrientationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrientationView.swift; sourceTree = "<group>"; };
+		1A4E7F812A8B5F8B0009D0B6 /* helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = helper.swift; sourceTree = "<group>"; };
 		1A704C612A806FE800CBEF26 /* MultiList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MultiList.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A704C642A806FE800CBEF26 /* MultiListApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiListApp.swift; sourceTree = "<group>"; };
 		1A704C662A806FE800CBEF26 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -48,6 +60,12 @@
 		1A8412492A80A6C000BD1BF5 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		1A84124B2A80CEFA00BD1BF5 /* MultiList.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MultiList.entitlements; sourceTree = "<group>"; };
 		1A84125A2A84937700BD1BF5 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		1A84125F2A860C1300BD1BF5 /* UserSettingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingView.swift; sourceTree = "<group>"; };
+		1A8412622A860C3A00BD1BF5 /* UserSettingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingViewModel.swift; sourceTree = "<group>"; };
+		1A8412642A860D8300BD1BF5 /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
+		7025139252B8DB5F5116C693 /* Pods-MultiList.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MultiList.release.xcconfig"; path = "Target Support Files/Pods-MultiList/Pods-MultiList.release.xcconfig"; sourceTree = "<group>"; };
+		7C3426BF30FE3F8C622FF16D /* Pods-MultiList.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MultiList.debug.xcconfig"; path = "Target Support Files/Pods-MultiList/Pods-MultiList.debug.xcconfig"; sourceTree = "<group>"; };
+		E5DA7AE246DE9064DFE79F85 /* Pods_MultiList.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MultiList.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,6 +73,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1A84125C2A84D22B00BD1BF5 /* Pods_MultiList.framework in Frameworks */,
 				1A8412432A80987D00BD1BF5 /* GoogleSignIn in Frameworks */,
 				1A8412542A82571800BD1BF5 /* KakaoSDKShare in Frameworks */,
 				1A8412522A82571800BD1BF5 /* KakaoSDKCommon in Frameworks */,
@@ -70,11 +89,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1A4E7F7C2A8B18FD0009D0B6 /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				1A704C7E2A80736400CBEF26 /* ButtonScaleEffect.swift */,
+				1A4E7F7A2A89C4680009D0B6 /* ColorExtension.swift */,
+				1A4E7F7D2A8B19120009D0B6 /* DetectOrientation.swift */,
+				1A4E7F812A8B5F8B0009D0B6 /* helper.swift */,
+			);
+			path = Helper;
+			sourceTree = "<group>";
+		};
 		1A704C582A806FE800CBEF26 = {
 			isa = PBXGroup;
 			children = (
 				1A704C632A806FE800CBEF26 /* MultiList */,
 				1A704C622A806FE800CBEF26 /* Products */,
+				B2B197B3ACEE4CA886CC8C0F /* Pods */,
+				8244CB83DA559E9A5B2BF56E /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -94,7 +126,8 @@
 				1A704C642A806FE800CBEF26 /* MultiListApp.swift */,
 				1A704C662A806FE800CBEF26 /* ContentView.swift */,
 				1A8412462A80A65900BD1BF5 /* HomeScenes */,
-				1A704C7E2A80736400CBEF26 /* ButtonScaleEffect.swift */,
+				1A8412662A860E1B00BD1BF5 /* Endtity */,
+				1A4E7F7C2A8B18FD0009D0B6 /* Helper */,
 				1A84123E2A808D6C00BD1BF5 /* Langguages.swift */,
 				1A704C682A806FE800CBEF26 /* Assets.xcassets */,
 				1A704C6D2A806FE800CBEF26 /* Persistence.swift */,
@@ -128,8 +161,44 @@
 				1A8412472A80A66900BD1BF5 /* HomeView.swift */,
 				1A8412492A80A6C000BD1BF5 /* HomeViewModel.swift */,
 				1A704C7B2A8070B300CBEF26 /* LoginScenes */,
+				1A8412612A860C1B00BD1BF5 /* UserSettingScenes */,
 			);
 			path = HomeScenes;
+			sourceTree = "<group>";
+		};
+		1A8412612A860C1B00BD1BF5 /* UserSettingScenes */ = {
+			isa = PBXGroup;
+			children = (
+				1A84125F2A860C1300BD1BF5 /* UserSettingView.swift */,
+				1A8412622A860C3A00BD1BF5 /* UserSettingViewModel.swift */,
+				1A4E7F7F2A8B28620009D0B6 /* OrientationView.swift */,
+			);
+			path = UserSettingScenes;
+			sourceTree = "<group>";
+		};
+		1A8412662A860E1B00BD1BF5 /* Endtity */ = {
+			isa = PBXGroup;
+			children = (
+				1A8412642A860D8300BD1BF5 /* UserModel.swift */,
+			);
+			path = Endtity;
+			sourceTree = "<group>";
+		};
+		8244CB83DA559E9A5B2BF56E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E5DA7AE246DE9064DFE79F85 /* Pods_MultiList.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B2B197B3ACEE4CA886CC8C0F /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				7C3426BF30FE3F8C622FF16D /* Pods-MultiList.debug.xcconfig */,
+				7025139252B8DB5F5116C693 /* Pods-MultiList.release.xcconfig */,
+			);
+			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -139,9 +208,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1A704C742A806FE800CBEF26 /* Build configuration list for PBXNativeTarget "MultiList" */;
 			buildPhases = (
+				F47530DFD5C9407757CAD196 /* [CP] Check Pods Manifest.lock */,
 				1A704C5D2A806FE800CBEF26 /* Sources */,
 				1A704C5E2A806FE800CBEF26 /* Frameworks */,
 				1A704C5F2A806FE800CBEF26 /* Resources */,
+				D9D971B7E8951221D0FBA11B /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -214,6 +285,48 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		D9D971B7E8951221D0FBA11B /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MultiList/Pods-MultiList-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MultiList/Pods-MultiList-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MultiList/Pods-MultiList-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F47530DFD5C9407757CAD196 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-MultiList-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		1A704C5D2A806FE800CBEF26 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -221,13 +334,20 @@
 			files = (
 				1A8412482A80A66900BD1BF5 /* HomeView.swift in Sources */,
 				1A704C782A8070A300CBEF26 /* LoginView.swift in Sources */,
+				1A8412602A860C1300BD1BF5 /* UserSettingView.swift in Sources */,
 				1A84123F2A808D6C00BD1BF5 /* Langguages.swift in Sources */,
 				1A84124A2A80A6C000BD1BF5 /* HomeViewModel.swift in Sources */,
+				1A4E7F7E2A8B19120009D0B6 /* DetectOrientation.swift in Sources */,
+				1A4E7F822A8B5F8B0009D0B6 /* helper.swift in Sources */,
+				1A4E7F7B2A89C4680009D0B6 /* ColorExtension.swift in Sources */,
+				1A4E7F802A8B28620009D0B6 /* OrientationView.swift in Sources */,
+				1A8412652A860D8300BD1BF5 /* UserModel.swift in Sources */,
 				1A704C6E2A806FE800CBEF26 /* Persistence.swift in Sources */,
 				1A704C712A806FE800CBEF26 /* MultiList.xcdatamodeld in Sources */,
 				1A704C672A806FE800CBEF26 /* ContentView.swift in Sources */,
 				1A704C7D2A8070D800CBEF26 /* LoginViewModel.swift in Sources */,
 				1A704C652A806FE800CBEF26 /* MultiListApp.swift in Sources */,
+				1A8412632A860C3A00BD1BF5 /* UserSettingViewModel.swift in Sources */,
 				1A704C7F2A80736400CBEF26 /* ButtonScaleEffect.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -351,6 +471,7 @@
 		};
 		1A704C752A806FE800CBEF26 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7C3426BF30FE3F8C622FF16D /* Pods-MultiList.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -365,8 +486,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -382,6 +502,7 @@
 		};
 		1A704C762A806FE800CBEF26 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7025139252B8DB5F5116C693 /* Pods-MultiList.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -396,8 +517,7 @@
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

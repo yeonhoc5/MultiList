@@ -9,8 +9,13 @@ import Foundation
 import FirebaseRemoteConfig
 
 class HomeViewModel: ObservableObject {
-    @Published var isShowingAlert: Bool = false
+    @Published var isShowingProgressView: Bool = false
     @Published var isLoggedIn: Bool = false
+    
+    @Published var isShowingAlert: Bool = false
+    
+    @Published var user: UserModel!
+    
     var title: String = "non"
     var message: String = "non"
     
@@ -18,6 +23,23 @@ class HomeViewModel: ObservableObject {
         Task {
             try await checkRemoteConfig()
         }
+        addNotificationObserverToUser()
+    }
+    
+    func addNotificationObserverToUser() {
+        _ = NotificationCenter.default.addObserver(forName: Notification.Name("settedUser"), object: nil, queue: .main, using: { notification in
+            print("노티피케이션 수신 완료")
+            DispatchQueue.main.async {
+                self.user = notification.object as? UserModel
+            }
+        })
+        
+        _ = NotificationCenter.default.addObserver(forName: Notification.Name("progressView"), object: nil, queue: .main, using: { _ in
+            DispatchQueue.main.async {
+                self.isShowingProgressView = true
+            }
+        })
+        
     }
     
     func checkRemoteConfig() async throws {
