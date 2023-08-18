@@ -9,8 +9,14 @@
 /* Begin PBXBuildFile section */
 		1A4E7F7B2A89C4680009D0B6 /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A4E7F7A2A89C4680009D0B6 /* ColorExtension.swift */; };
 		1A4E7F7E2A8B19120009D0B6 /* DetectOrientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A4E7F7D2A8B19120009D0B6 /* DetectOrientation.swift */; };
-		1A4E7F802A8B28620009D0B6 /* OrientationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A4E7F7F2A8B28620009D0B6 /* OrientationView.swift */; };
+		1A4E7F802A8B28620009D0B6 /* OrientationStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A4E7F7F2A8B28620009D0B6 /* OrientationStackView.swift */; };
 		1A4E7F822A8B5F8B0009D0B6 /* helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A4E7F812A8B5F8B0009D0B6 /* helper.swift */; };
+		1A4E7F842A8C4E910009D0B6 /* CustomProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A4E7F832A8C4E910009D0B6 /* CustomProgressView.swift */; };
+		1A4E7F882A8C66D60009D0B6 /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A4E7F872A8C66D60009D0B6 /* ListView.swift */; };
+		1A4E7F8A2A8C66DF0009D0B6 /* ListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A4E7F892A8C66DF0009D0B6 /* ListViewModel.swift */; };
+		1A4E7F8D2A8C69640009D0B6 /* CustomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A4E7F8C2A8C69640009D0B6 /* CustomView.swift */; };
+		1A4E7F8F2A8F30330009D0B6 /* MultiListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A4E7F8E2A8F30330009D0B6 /* MultiListView.swift */; };
+		1A4E7F912A8F303B0009D0B6 /* MultiListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A4E7F902A8F303B0009D0B6 /* MultiListViewModel.swift */; };
 		1A704C652A806FE800CBEF26 /* MultiListApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A704C642A806FE800CBEF26 /* MultiListApp.swift */; };
 		1A704C672A806FE800CBEF26 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A704C662A806FE800CBEF26 /* ContentView.swift */; };
 		1A704C692A806FE800CBEF26 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A704C682A806FE800CBEF26 /* Assets.xcassets */; };
@@ -42,8 +48,14 @@
 /* Begin PBXFileReference section */
 		1A4E7F7A2A89C4680009D0B6 /* ColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
 		1A4E7F7D2A8B19120009D0B6 /* DetectOrientation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetectOrientation.swift; sourceTree = "<group>"; };
-		1A4E7F7F2A8B28620009D0B6 /* OrientationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrientationView.swift; sourceTree = "<group>"; };
+		1A4E7F7F2A8B28620009D0B6 /* OrientationStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrientationStackView.swift; sourceTree = "<group>"; };
 		1A4E7F812A8B5F8B0009D0B6 /* helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = helper.swift; sourceTree = "<group>"; };
+		1A4E7F832A8C4E910009D0B6 /* CustomProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomProgressView.swift; sourceTree = "<group>"; };
+		1A4E7F872A8C66D60009D0B6 /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
+		1A4E7F892A8C66DF0009D0B6 /* ListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewModel.swift; sourceTree = "<group>"; };
+		1A4E7F8C2A8C69640009D0B6 /* CustomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomView.swift; sourceTree = "<group>"; };
+		1A4E7F8E2A8F30330009D0B6 /* MultiListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiListView.swift; sourceTree = "<group>"; };
+		1A4E7F902A8F303B0009D0B6 /* MultiListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiListViewModel.swift; sourceTree = "<group>"; };
 		1A704C612A806FE800CBEF26 /* MultiList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MultiList.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A704C642A806FE800CBEF26 /* MultiListApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiListApp.swift; sourceTree = "<group>"; };
 		1A704C662A806FE800CBEF26 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -92,12 +104,34 @@
 		1A4E7F7C2A8B18FD0009D0B6 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
+				1A4E7F8C2A8C69640009D0B6 /* CustomView.swift */,
+				1A4E7F832A8C4E910009D0B6 /* CustomProgressView.swift */,
 				1A704C7E2A80736400CBEF26 /* ButtonScaleEffect.swift */,
 				1A4E7F7A2A89C4680009D0B6 /* ColorExtension.swift */,
 				1A4E7F7D2A8B19120009D0B6 /* DetectOrientation.swift */,
+				1A4E7F7F2A8B28620009D0B6 /* OrientationStackView.swift */,
 				1A4E7F812A8B5F8B0009D0B6 /* helper.swift */,
 			);
 			path = Helper;
+			sourceTree = "<group>";
+		};
+		1A4E7F8B2A8C66E20009D0B6 /* ListScenes */ = {
+			isa = PBXGroup;
+			children = (
+				1A4E7F872A8C66D60009D0B6 /* ListView.swift */,
+				1A4E7F892A8C66DF0009D0B6 /* ListViewModel.swift */,
+				1A4E7F922A8F30410009D0B6 /* MultiListScenes */,
+			);
+			path = ListScenes;
+			sourceTree = "<group>";
+		};
+		1A4E7F922A8F30410009D0B6 /* MultiListScenes */ = {
+			isa = PBXGroup;
+			children = (
+				1A4E7F8E2A8F30330009D0B6 /* MultiListView.swift */,
+				1A4E7F902A8F303B0009D0B6 /* MultiListViewModel.swift */,
+			);
+			path = MultiListScenes;
 			sourceTree = "<group>";
 		};
 		1A704C582A806FE800CBEF26 = {
@@ -126,6 +160,7 @@
 				1A704C642A806FE800CBEF26 /* MultiListApp.swift */,
 				1A704C662A806FE800CBEF26 /* ContentView.swift */,
 				1A8412462A80A65900BD1BF5 /* HomeScenes */,
+				1A8412612A860C1B00BD1BF5 /* UserSettingScenes */,
 				1A8412662A860E1B00BD1BF5 /* Endtity */,
 				1A4E7F7C2A8B18FD0009D0B6 /* Helper */,
 				1A84123E2A808D6C00BD1BF5 /* Langguages.swift */,
@@ -161,7 +196,7 @@
 				1A8412472A80A66900BD1BF5 /* HomeView.swift */,
 				1A8412492A80A6C000BD1BF5 /* HomeViewModel.swift */,
 				1A704C7B2A8070B300CBEF26 /* LoginScenes */,
-				1A8412612A860C1B00BD1BF5 /* UserSettingScenes */,
+				1A4E7F8B2A8C66E20009D0B6 /* ListScenes */,
 			);
 			path = HomeScenes;
 			sourceTree = "<group>";
@@ -171,7 +206,6 @@
 			children = (
 				1A84125F2A860C1300BD1BF5 /* UserSettingView.swift */,
 				1A8412622A860C3A00BD1BF5 /* UserSettingViewModel.swift */,
-				1A4E7F7F2A8B28620009D0B6 /* OrientationView.swift */,
 			);
 			path = UserSettingScenes;
 			sourceTree = "<group>";
@@ -333,14 +367,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				1A8412482A80A66900BD1BF5 /* HomeView.swift in Sources */,
+				1A4E7F882A8C66D60009D0B6 /* ListView.swift in Sources */,
+				1A4E7F8F2A8F30330009D0B6 /* MultiListView.swift in Sources */,
 				1A704C782A8070A300CBEF26 /* LoginView.swift in Sources */,
+				1A4E7F8D2A8C69640009D0B6 /* CustomView.swift in Sources */,
+				1A4E7F842A8C4E910009D0B6 /* CustomProgressView.swift in Sources */,
 				1A8412602A860C1300BD1BF5 /* UserSettingView.swift in Sources */,
+				1A4E7F912A8F303B0009D0B6 /* MultiListViewModel.swift in Sources */,
 				1A84123F2A808D6C00BD1BF5 /* Langguages.swift in Sources */,
 				1A84124A2A80A6C000BD1BF5 /* HomeViewModel.swift in Sources */,
 				1A4E7F7E2A8B19120009D0B6 /* DetectOrientation.swift in Sources */,
 				1A4E7F822A8B5F8B0009D0B6 /* helper.swift in Sources */,
 				1A4E7F7B2A89C4680009D0B6 /* ColorExtension.swift in Sources */,
-				1A4E7F802A8B28620009D0B6 /* OrientationView.swift in Sources */,
+				1A4E7F8A2A8C66DF0009D0B6 /* ListViewModel.swift in Sources */,
+				1A4E7F802A8B28620009D0B6 /* OrientationStackView.swift in Sources */,
 				1A8412652A860D8300BD1BF5 /* UserModel.swift in Sources */,
 				1A704C6E2A806FE800CBEF26 /* Persistence.swift in Sources */,
 				1A704C712A806FE800CBEF26 /* MultiList.xcdatamodeld in Sources */,

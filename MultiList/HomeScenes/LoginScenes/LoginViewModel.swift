@@ -18,32 +18,17 @@ import FirebaseFirestore
 
 class LoginViewModel: NSObject, ObservableObject {
     
-    @Published var isShowingProgressView: Bool = false
-    @Published var user: UserModel! {
-        didSet {
-            let settedUser = Notification(name: Notification.Name("settedUser"), object: self.user)
-            print("노티피케이션 전송 요청")
-            NotificationCenter.default.post(settedUser)
-        }
-    }
-    @Published var isLoggedIn: Bool = false
-    @Published var messageData: String!
-    
-    
-    // 0: not / 1: 익명 / 2: 구글 / 3: 네이버 / 4: 카카오 / 5: 애플
-    var loginType: Int = 0
-    var loggedInID: String = ""
-    var loggedInName: String = ""
-    
+    @Published var user: UserModel!
+    @Published var message: String!
+
     // 애플 로그인은 처음 가입할 때만 이름을 주기 때문에 따로 저장
     var appleIDName: String = ""
     // 애플 로그인에 사용
     var currentNonce: String!
     
-    var errorMessage: String = ""
-    
     override init() {
         super.init()
+        print("로그인 모델 재붓")
         loadPreviousUser()
         setUserObserver()
     }
@@ -51,23 +36,35 @@ class LoginViewModel: NSObject, ObservableObject {
     func setUserObserver() {
         NotificationCenter.default.addObserver(forName: Notification.Name("userIsNil"), object: nil, queue: .main) { _ in
             self.user = nil
-            self.isLoggedIn = false
         }
     }
     
     func loadPreviousUser() {
         if let user = Auth.auth().currentUser {
-            let userDefaults = UserDefaults.standard
-            guard let userData = userDefaults.data(forKey: "multiUser"),
-                  let multiUser = try? PropertyListDecoder().decode(UserModel.self, from: userData),
-                  user.uid == multiUser.userUID
-            else { return }
-            
-            print("load previous User Done")
-            DispatchQueue.main.async {
-                self.user = multiUser
-                self.isLoggedIn = true
+            loadUserDataFromFirebase(id: user.uid) { user in
+                DispatchQueue.main.async {
+                    withAnimation {
+                        self.user = user
+                        NotificationCenter.default.post(name: Notification.Name("userSetted"), object: user)
+                    }
+                }
+                print("load previous User Done")
             }
+            
+            
+//            let userDefaults = UserDefaults.standard
+//            guard let userData = userDefaults.data(forKey: "multiUser"),
+//                  let multiUser = try? PropertyListDecoder().decode(UserModel.self, from: userData),
+//                  user.uid == multiUser.userUID
+//            else { return }
+            
+            
+            
+            
+//            DispatchQueue.main.async {
+//                self.user = multiUser
+//                self.isLoggedIn = true
+//            }
         }
     }
     
@@ -80,12 +77,12 @@ class LoginViewModel: NSObject, ObservableObject {
             guard let self = self else { return }
             if let uid = result?.user.uid, error == nil {
                 let uid = uid
-                let email = "anonymous"
-                let name = "익명의 손"
+                let email = "없음"
+                let name = "익명의 손님"
                 let date = result?.user.metadata.creationDate ?? Date()
                 self.completeLogin(type: 0, uid: uid, email: email, name: name, date: date)
             } else {
-                self.errorMessage = error?.localizedDescription ?? "익명 로그인 중 Error가 발생했습니다."
+                self.message = error?.localizedDescription ?? "익명 로그인 중 Error가 발생했습니다."
             }
         }
     }
@@ -102,7 +99,7 @@ class LoginViewModel: NSObject, ObservableObject {
         GIDSignIn.sharedInstance.configuration = config
         GIDSignIn.sharedInstance.signIn(withPresenting: presentingViewcontroller) { result, error in
             guard error == nil else {
-                self.errorMessage = error?.localizedDescription ?? "구글 로그인 중 Error가 발생했습니다."
+                self.message = error?.localizedDescription ?? "구글 로그인 중 Error가 발생했습니다."
                 return
             }
 
@@ -120,7 +117,7 @@ class LoginViewModel: NSObject, ObservableObject {
                     let date = authResult?.user.metadata.creationDate ?? Date()
                     self.completeLogin(type: 1, uid: uid, email: email, name: name, date: date)
                 } else {
-                    self.errorMessage = error?.localizedDescription ?? "로그인 중 Error가 발생했습니다."
+                    self.message = error?.localizedDescription ?? "로그인 중 Error가 발생했습니다."
                 }
             }
         }
@@ -150,12 +147,12 @@ class LoginViewModel: NSObject, ObservableObject {
             }
             Auth.auth().signIn(with: credential) { result, error in
                 guard let user = result?.user, error == nil else {
-                    self.errorMessage = "가입 중 Error가 발생했습니다."
+                    self.message = "가입 중 Error가 발생했습니다."
                     return
                 }
                 UserApi.shared.me { kakaoUser, error in
                     guard let account = kakaoUser?.kakaoAccount, error == nil else {
-                        self.errorMessage = "카카오 계정에서 정보를 얻지 못했습니다.."
+                        self.message = "카카오 계정에서 정보를 얻지 못했습니다.."
                         return
                     }
                     let uid = user.uid
@@ -174,17 +171,6 @@ class LoginViewModel: NSObject, ObservableObject {
         case .success(let authResults):
             switch authResults.credential {
             case let appleIDCredential as ASAuthorizationAppleIDCredential:
-                
-                var fullName = "appleID"
-                if let familyName = appleIDCredential.fullName?.familyName,
-                   let givenName = appleIDCredential.fullName?.givenName {
-                    fullName = familyName + givenName
-                } else {
-                    let userDefaults = UserDefaults.standard
-                    if let name = userDefaults.string(forKey: "appleIDName") {
-                        fullName = name
-                    }
-                }
                 
                 guard let nonce = self.currentNonce else {
                     fatalError("Invalid state: A login callback was received, but no login request was sent.")
@@ -217,6 +203,18 @@ class LoginViewModel: NSObject, ObservableObject {
                             }
                             let uid = uid
                             let email = authResult?.user.email ?? "알 수 없는 계정"
+                            
+                            var fullName = "appleID"
+                            if let familyName = appleIDCredential.fullName?.familyName,
+                               let givenName = appleIDCredential.fullName?.givenName {
+                                fullName = familyName + givenName
+                            } else {
+                                let userDefaults = UserDefaults.standard
+                                if let name = userDefaults.string(forKey: "appleIDName") {
+                                    fullName = name
+                                }
+                            }
+                            
                             let name = fullName
                             let date = authResult?.user.metadata.creationDate ?? Date()
                             self.completeLogin(type: 4, uid: uid, email: email, name: name, date: date)
@@ -252,14 +250,15 @@ class LoginViewModel: NSObject, ObservableObject {
     // firebase 로그인 완료 시 공통 처리 내용
     func completeLogin(type: Int, uid: String, email: String, name: String, date: Date) {
         let multiUser = UserModel(accountType: type, userUID: uid, userEmail: email, dateRegistered: date, userNickName: name)
-        self.user = multiUser
-        DispatchQueue.main.async {
-            withAnimation {
-                self.isLoggedIn = true
-            }
-        }
-        
+        // 데이터 세팅 후 유저 로딩
         makeUserDataAtFireStore(user: multiUser)
+//        DispatchQueue.main.async {
+//            withAnimation {
+//                self.isLoggedIn = true
+//            }
+//        }
+        
+        
         
         DispatchQueue.main.async {
             self.saveIDinDevice(user: multiUser)
@@ -268,18 +267,42 @@ class LoginViewModel: NSObject, ObservableObject {
     
     func makeUserDataAtFireStore(user: UserModel) {
         let db = Firestore.firestore()
-        // 1. 유저 정보
-        if let email = user.userEmail {
-            db.collection("users").document(user.userUID).setData(["accountType": user.accountType,
-                                                                   "email": email,
-                                                                   "name": user.userNickName,
-                                                                   "creationDate": user.dateRegistered])
-        } else {
-            self.messageData = "데이터 생성 중 오류가 발생했습니다."
+        // 첫 사용자면 데이터 세팅
+        let path = db.collection("users").document(user.userUID)
+        path.getDocument { snapshot, error in
+            if snapshot?.exists == false {
+                if let email = user.userEmail {
+                    db.collection("users").document(user.userUID).setData(["accountType": user.accountType,
+                                                                           "email": email,
+                                                                           "name": user.userNickName,
+                                                                           "creationDate": user.dateRegistered])
+                    print("새로운 유저 데이터 생성 완료")
+                    
+                    db.collection("users").document(user.userUID).collection("sectionList").document().setData([
+                        "order": 0,
+                        "color": 0,
+                        "sectionName": "리스트 1"
+                    ])
+                    
+                    NotificationCenter.default.post(name: Notification.Name("userSetted"), object: user)
+                    DispatchQueue.main.async {
+                        self.user = user
+                    }
+                } else {
+                    self.message = "데이터 생성 중 오류가 발생했습니다."
+                }
+            } else {
+                self.loadUserDataFromFirebase(id: user.userUID) { user in
+                    print("기존 유저 로딩 완료")
+                    DispatchQueue.main.async {
+                        self.user = user
+                    }
+                    NotificationCenter.default.post(name: Notification.Name("userSetted"), object: user)
+                }
+            }
         }
-        
     }
-
+    
     func saveIDinDevice(user: UserModel) {
         let userDefaults = UserDefaults.standard
         userDefaults.set(try? PropertyListEncoder().encode(user), forKey: "multiUser")
@@ -293,10 +316,9 @@ class LoginViewModel: NSObject, ObservableObject {
             if user?.isAnonymous == true {
                 user?.delete(completion: { error in
                     if error != nil {
-                        self.errorMessage = String(error?.localizedDescription ?? "")
-                        print(self.errorMessage)
+                        self.message = String(error?.localizedDescription ?? "")
+                        print(self.message!)
                     } else {
-                        self.loginType = 0
                         let userDefaults = UserDefaults.standard
                         userDefaults.removeObject(forKey: "loginType")
                         print("Anonymous User deleted")
@@ -309,7 +331,6 @@ class LoginViewModel: NSObject, ObservableObject {
             if Auth.auth().currentUser == nil {
                 DispatchQueue.main.async {
                     withAnimation(.easeInOut) {
-                        self.isLoggedIn = false
                         self.user = nil
                     }
                 }
@@ -328,6 +349,34 @@ class LoginViewModel: NSObject, ObservableObject {
         
         let str = formatter.string(from: date)
         return str
+    }
+    
+    
+    func loadUserDataFromFirebase(id: String, result: @escaping (UserModel) -> Void) {
+        let db = Firestore.firestore()
+        let path = db.collection("users").document(id)
+        path.getDocument { snapshot, error in
+            if let snapshot = snapshot, error == nil {
+                
+                guard let data = snapshot.data(),
+                      let type = data["accountType"] as? Int,
+                      let email = data["email"] as? String,
+                      let name = data["name"] as? String,
+                      let creDate = data["creationDate"] as? Timestamp
+                else {
+                    self.message = "User 정보 Parsing 중 에러가 발생했습니다.\n\(String(describing: error?.localizedDescription))"
+                    print(self.message!)
+                    return
+                }
+                    
+                let loadedUser = UserModel(accountType: type, userUID: id, userEmail: email, dateRegistered: creDate.dateValue(), userNickName: name)
+                result(loadedUser)
+            } else {
+                self.message = "2. User 정보 SnapShot 중 에러가 발생했습니다..\n\(String(describing: error?.localizedDescription))"
+                print(self.message!)
+            }
+            
+        }
     }
     
 }
@@ -387,7 +436,7 @@ extension LoginViewModel: NaverThirdPartyLoginConnectionDelegate {
     }
 
     func oauth20Connection(_ oauthConnection: NaverThirdPartyLoginConnection!, didFailWithError error: Error!) {
-        errorMessage = error.localizedDescription
+        message = error.localizedDescription
     }
     
     func oauth20ConnectionDidFinishRequestACTokenWithAuthCode() {
