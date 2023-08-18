@@ -13,74 +13,30 @@ struct LoginView: View {
     @StateObject var viewModel = LoginViewModel()
     
     @Binding var isShowingProgressView: Bool
-    @Binding var isLoggedin: Bool
-    
-    @State var isShowingMessage: Bool = false
-    @State var messageHome: String = ""
-    var height: CGFloat = 150
+    var nameSpace: Namespace.ID
     
     var body: some View {
-        ZStack {
-            if viewModel.isLoggedIn {
-//                loggedInView(type: viewModel.loginType,
-//                             name: viewModel.loggedInName,
-//                             id: viewModel.loggedInID)
-                sampleView(user: viewModel.user)
-                    .onAppear {
-                        isLoggedin = viewModel.isLoggedIn
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                            withAnimation {
-                                self.isShowingProgressView = false
-                            }
-                        }
-                    }
-            } else {
+        Group {
+            if viewModel.user == nil {
                 notLoggedInView
-                    .onAppear {
-                        isLoggedin = viewModel.isLoggedIn
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                            self.isShowingMessage = false
-                            self.messageHome = ""
-                        }
-                    }
+                    .matchedGeometryEffect(id: "loggin", in: nameSpace)
+            } else {
+                loggedInView(user: viewModel.user)
+                    .matchedGeometryEffect(id: "loggout", in: nameSpace)
             }
-            if isShowingMessage {
-                messageView
+        }
+        .onAppear {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                self.isShowingProgressView = false
             }
         }
     }
 }
 
 extension LoginView {
-    // 1. 로그인 완료 뷰
-    func loggedInView(type: Int, name: String, id: String) -> some View {
-        VStack {
-            ZStack {
-                Rectangle()
-                    .foregroundColor(.orange)
-                VStack {
-                    Text("안녕하세요, \(name)님")
-                        .padding(10)
-                    Text(id)
-                    Text("현재 익명 사용중입니다.\n 안전한 데이터 관리를 위해 로그인하여 사용하시길 권장합니다.")
-                        .padding(10)
-                }
-                .frame(maxWidth: 500)
-            }
-            .frame(height: height)
-            .cornerRadius(10)
-            buttonLogin(title: "로그아웃") {
-                viewModel.logout {
-                    DispatchQueue.main.async {
-                        self.isLoggedin = false
-                    }
-                }
-            }
-        }
-    }
     
-    // 2. sampleView
-    func sampleView(user: UserModel) -> some View {
+    // 1. sampleView
+    func loggedInView(user: UserModel) -> some View {
         ZStack {
             Rectangle()
                 .foregroundColor(.orange)
@@ -105,11 +61,11 @@ extension LoginView {
             .frame(maxWidth: 400)
             .padding(10)
         }
-        .frame(height: height)
         .cornerRadius(10)
     }
     
     // 2. not 로그인 뷰
+//    func notLoggedInView(isVertical: Bool, screenSize: CGSize) -> some View {
     var notLoggedInView: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 10)
@@ -125,33 +81,34 @@ extension LoginView {
                     Spacer()
                 }
                 .padding(.top, 10)
-                GeometryReader { proxy in
-                    HStack(spacing: 20) {
-                        buttonLogin(image: "logo_google") {
-                            viewModel.loginWithGoogle()
-                        }
-                        .cornerRadius(5, antialiased: true)
-                        .shadow(color: .black, radius: 0.4, x: 0, y: 0)
-//                        buttonLogin(title: "N", btncolor: .green, textColor: .white) {
-//                            viewModel.loginWithNaver()
-//                        }
-                        buttonLogin(image: "logo_kakao", backgroundColor: .yellow) {
-                            viewModel.loginWithKakao()
-                        }
-                        .cornerRadius(5, antialiased: true)
+                OStack(alignment: .center, spacing: 10, isVerticalFirst: false) {
+                    
+                    buttonLogin(image: "logo_google") {
+                        viewModel.loginWithGoogle()
+                    }
+                    .cornerRadius(5, antialiased: true)
+                    .shadow(color: .black, radius: 0.4, x: 0, y: 0)
+                    //                        buttonLogin(title: "N", btncolor: .green, textColor: .white) {
+                    //                            viewModel.loginWithNaver()
+                    //                        }
+                    buttonLogin(image: "logo_kakao", backgroundColor: .yellow) {
+                        viewModel.loginWithKakao()
+                    }
+                    .cornerRadius(5, antialiased: true)
+                    GeometryReader { proxy in
                         buttonLoginApple()
-                            .frame(width: (proxy.size.width - 40) / 3,
-                                   height: proxy.size.height)
-//                            .clipped()
+                            .frame(width: proxy.size.width, height: proxy.size.height)
+                            .clipped()
                             .cornerRadius(5, antialiased: true)
-                            .shadow(color: .white, radius: 0.4, x: 0, y: 0)
+                            .shadow(color: .primaryInverted, radius: 0.4, x: 0, y: 0)
                     }
                 }
+                
             }
             .padding(10)
-            .frame(maxWidth: 400)
+                .frame(maxWidth: 400, maxHeight: 400)
         }
-        .frame(height: height)
+        
     }
     
     // 3. 메세지뷰
@@ -160,7 +117,7 @@ extension LoginView {
             RoundedRectangle(cornerRadius: 10)
                 .foregroundColor(.white.opacity(0.9))
                 .frame(height: 100)
-            Text(messageHome)
+            Text(viewModel.message)
                 .foregroundColor(.black)
         }
         .padding(.horizontal, 40)
@@ -170,54 +127,18 @@ extension LoginView {
 
 // MARK: - [extension] 버튼
 extension LoginView {
-    func buttonLogin(title: String,
-                     btncolor: Color = .teal,
-                     textColor: Color = .white,
-                     login: @escaping(() -> Void)) -> some View {
-        Button {
-            login()
-        } label: {
-            ZStack {
-                RoundedRectangle(cornerRadius: 5)
-                    .foregroundColor(btncolor)
-                Text(title)
-                    .font(.headline)
-                    .foregroundColor(textColor)
-                    .fontWeight(.black)
-            }
-        }
-        .buttonStyle(ScaleEffect(scale: 0.9))
-    }
-    
-    func buttonLogin(image: String,
-                     backgroundColor: Color = .white,
-                     login: @escaping(() -> Void)) -> some View {
-        Button {
-            login()
-        } label: {
-            ZStack {
-                RoundedRectangle(cornerRadius: 5)
-                    .foregroundColor(backgroundColor)
-                Image(image)
-                    .resizable()
-                    .padding(5)
-                    .scaledToFit()
-            }
-        }
-        .buttonStyle(ScaleEffect(scale: 0.9))
-    }
-    
     func buttonLoginApple() -> some View {
-//        ZStack {
-//            Color.black
+        ZStack {
+            Color.black
             SignInWithAppleButton(.continue) { request in
                 viewModel.handleRequest(request: request) { _ in
                 }
             } onCompletion: { result in
                 self.viewModel.loginWithApple(result: result)
             }
-            .frame(width: 100, height: 70)
-//        }
+            .frame(width: 130)
+            .frame(minHeight: 70)
+        }
         .buttonStyle(ScaleEffect(scale: 0.9))
     }
 }
@@ -225,6 +146,6 @@ extension LoginView {
 
 struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
-        LoginView(isShowingProgressView: .constant(false), isLoggedin: .constant(false))
+        LoginView(isShowingProgressView: .constant(false), nameSpace: Namespace.init().wrappedValue)
     }
 }

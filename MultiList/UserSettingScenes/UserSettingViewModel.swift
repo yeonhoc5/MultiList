@@ -9,14 +9,24 @@ import Foundation
 import FirebaseAuth
 import FirebaseFirestore
 
-class UserSettingViewModel {
-    var user: UserModel
+class UserSettingViewModel: ObservableObject {
+    @Published var user: UserModel!
     
     var messageAccount: String!
     
-    init(user: UserModel) {
+    init(user: UserModel!) {
         self.user = user
+//        addUserObserver()
     }
+    
+//    func addUserObserver() {
+//        NotificationCenter.default.addObserver(forName: Notification.Name("userSetted"), object: nil, queue: .main, using: { notification in
+//            if let user = notification.object as? UserModel {
+//                print("유저 세팅뷰: 노티피케이션 수신 완료")
+//                self.user = user
+//            }
+//        })
+//    }
     
     // 익명 로그인 시 SNS 계정으로 전환
     func changeEternalAccount() {
@@ -28,6 +38,7 @@ class UserSettingViewModel {
         do {
             try Auth.auth().signOut()
             if Auth.auth().currentUser == nil {
+                self.user = nil
                 self.userIsNil()
                 completion()
             }
@@ -48,11 +59,11 @@ class UserSettingViewModel {
                 let db = Firestore.firestore()
                 if let uid = user?.uid {
                     db.collection("users").document(uid).delete()
+                    self.user = nil
                     self.userIsNil()
                     completion()
                 }
                 
-                let userDefaults = UserDefaults.standard
             }
         })
     }

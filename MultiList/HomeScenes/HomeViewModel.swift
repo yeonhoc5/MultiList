@@ -7,17 +7,22 @@
 
 import Foundation
 import FirebaseRemoteConfig
+import FirebaseFirestore
 
 class HomeViewModel: ObservableObject {
+    @Published var user: UserModel! {
+        didSet {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self.isShowingProgressView = false
+            }
+        }
+    }
     @Published var isShowingProgressView: Bool = false
-    @Published var isLoggedIn: Bool = false
     
-    @Published var isShowingAlert: Bool = false
-    
-    @Published var user: UserModel!
-    
+    // 홈 알럿 프라퍼티
     var title: String = "non"
     var message: String = "non"
+    @Published var isShowingAlert: Bool = false
     
     init() {
         Task {
@@ -27,13 +32,12 @@ class HomeViewModel: ObservableObject {
     }
     
     func addNotificationObserverToUser() {
-        _ = NotificationCenter.default.addObserver(forName: Notification.Name("settedUser"), object: nil, queue: .main, using: { notification in
-            print("노티피케이션 수신 완료")
-            DispatchQueue.main.async {
-                self.user = notification.object as? UserModel
-            }
+        _ = NotificationCenter.default.addObserver(forName: Notification.Name("userSetted"), object: nil, queue: .main, using: { notification in
+            print("홈뷰: 노티피케이션 수신 완료")
+            let user = notification.object as? UserModel
+            self.user = user
         })
-        
+//
         _ = NotificationCenter.default.addObserver(forName: Notification.Name("progressView"), object: nil, queue: .main, using: { _ in
             DispatchQueue.main.async {
                 self.isShowingProgressView = true
@@ -62,9 +66,5 @@ class HomeViewModel: ObservableObject {
         } catch let error {
             print(error.localizedDescription)
         }
-    }
-    
-    func loadUserDataFromFirebase(id: String) {
-        
     }
 }

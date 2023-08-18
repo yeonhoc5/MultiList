@@ -17,20 +17,19 @@ var screenSize: CGSize {
     }
 }
 
-struct DeviceRotationViewModifier: ViewModifier {
-    let action: (UIDeviceOrientation) -> Void
+struct OrientationDetector: ViewModifier {
+  @Binding var orientation: UIDeviceOrientation
 
-    func body(content: Content) -> some View {
-        content
-            .onAppear()
-            .onReceive(NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)) { _ in
-                action(UIDevice.current.orientation)
-            }
-    }
+  func body(content: Content) -> some View {
+    content
+      .onReceive(NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)) { _ in
+        orientation = UIDevice.current.orientation
+      }
+  }
 }
 
 extension View {
-    func onRotate(perform action: @escaping (UIDeviceOrientation) -> Void) -> some View {
-        self.modifier(DeviceRotationViewModifier(action: action))
-    }
+  func detectOrientation(_ binding: Binding<UIDeviceOrientation>) -> some View {
+    self.modifier(OrientationDetector(orientation: binding))
+  }
 }
