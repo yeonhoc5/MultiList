@@ -9,10 +9,17 @@ import SwiftUI
 import FirebaseRemoteConfig
 
 struct HomeView: View {
-    @StateObject var homeViewModel = HomeViewModel()
+    @EnvironmentObject var userData: UserData
+    @StateObject var viewModel = HomeViewModel()
     
-    @State var isShowingProgressview: Bool = false
-
+    @State var isShowingProgressView: Bool = false
+    @State var isShowingShareSheet: Bool = false
+    @State var isEditMode: Bool = false
+    // myItem Properties
+    @State var isShowingMyItemSheet: Bool = false
+    @State var myItemNumber: Int = 0
+    @State var selectedItemType: MyItemType = .text
+    
     @Namespace var homeView
     
     var body: some View {
@@ -21,78 +28,116 @@ struct HomeView: View {
                 Rectangle()
                     .foregroundColor(.primaryInverted)
                 OStack(alignment: .center, spacing: 0) {
-//                    let loginViewModel = LoginViewModel()
-                    LoginView(isShowingProgressView: $isShowingProgressview,
+                    LoginView(userData: userData,
+                              isShowingProgressView: $isShowingProgressView,
+                              isShowingMyItemSheet: $isShowingMyItemSheet,
+                              myItemNumber: $myItemNumber,
+                              selectedItemType: $selectedItemType,
                               nameSpace: homeView)
                         .matchedGeometryEffect(id: "loginView", in: homeView)
-                        .frame(maxWidth: screenSize.width < screenSize.height ? .infinity : screenSize.width * 0.3)
-                        .frame(maxHeight: screenSize.width < screenSize.height ? 150 : .infinity)
-                        .padding([.horizontal, .top], 10)
-                        .padding(.bottom, screenSize.width < screenSize.height ? 0 : 10)
-                    ListView(viewModel: ListViewModel())
+                        .frame(maxWidth: viewModel.isVertical ? .infinity : screenSize.width * 0.3)
+                        .frame(maxHeight: viewModel.isVertical ? screenSize.height * 0.18 : .infinity)
+                        .padding(.horizontal, 10)
+                        .padding(.top, 5)
+                        .padding(.bottom, viewModel.isVertical ? 0 : 10)
+                        .zIndex(1)
+                    ListView(userData: userData, isEditMode: $isEditMode)
                         .matchedGeometryEffect(id: "listView", in: homeView)
-                        .opacity(homeViewModel.user == nil ? 0.4 : 1)
-                        .overlay(alignment: .center) {
-                            if homeViewModel.user == nil {
-                                sampleMark
-                                    .frame(width: 120, height: 80)
-                                    .offset(y: 20)
-                            }
-                        }
+                        .zIndex(0)
                 }
             }
             .navigationTitle("Multi List")
-            .edgesIgnoringSafeArea(.bottom)
+            .navigationSplitViewColumnWidth(screenSize.width * 0.4)
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    let userSettingViewModel = UserSettingViewModel(user: homeViewModel.user)
-                    userSettingView(viewModel: userSettingViewModel)
+                ToolbarItem(placement: .navigationBarLeading) {
+                    shareSheetButton
                 }
-            }
-            .alert(homeViewModel.title,
-                   isPresented: $homeViewModel.isShowingAlert) {
-            } message: {
-                Text(homeViewModel.message)
+//                ToolbarItem(placement: .navigationBarTrailing) {
+//                    editModeButton
+//                }
             }
             .overlay(content: {
-                if homeViewModel.isShowingProgressView {
+                if isShowingProgressView {
                     CustomProgressView()
                 }
             })
+            .alert(viewModel.title,
+                   isPresented: $viewModel.isShowingAlert) {
+            } message: {
+                Text(viewModel.message)
+            }
+            .sheet(isPresented: $isShowingShareSheet) {
+                ShareSheetView(userData: userData, isShowingSheet: $isShowingShareSheet)
+            }
+            .onChange(of: userData.user == nil) { _ in
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    isShowingProgressView = false
+                }
+            }
         }
+        .tint(Color.teal)
+//        .ignoresSafeArea(.keyboard, edges: .bottom)
     }
     
 }
 
-
-// MARK: - [extension 1] SubViews
 extension HomeView {
     
-    func userSettingView(viewModel: UserSettingViewModel) -> some View {
-        NavigationLink {
-            UserSettingView(viewModel: viewModel)
+    var shareSheetButton: some View {
+        Button {
+            isShowingShareSheet = true
         } label: {
-            Image(systemName: "person.crop.circle")
-                .tint(homeViewModel.user == nil ? .gray : .teal)
+            sharedMultiListButton
         }
     }
-    
-    var sampleMark: some View {
-        ZStack {
-            Rectangle().fill(Color.red.opacity(0.4))
-            Rectangle().fill(Color.primaryInverted)
-                .padding(5)
-            
-            Text("S A M P L E").foregroundColor(.red.opacity(0.4)).fontWeight(.bold)
-        }
-        
-    }
-    
-}
 
-// MARK: - [extension 2] functions
-extension HomeView {
+    var editModeButton: some View {
+        Button {
+            isEditMode.toggle()
+        } label: {
+            if !isEditMode {
+                Image(systemName: "gearshape")
+                    .imageScale(.large)
+                    .foregroundColor(userData.user == nil ? .gray : .primary)
+            } else {
+                Text("Done")
+                    .foregroundColor(userData.user == nil ? .gray : .primary)
+            }
+            
+        }
+    }
     
+    var sharedMultiListButton: some View {
+        ZStack {
+            Image(systemName: "doc")
+                .imageScale(.large)
+                .overlay(alignment: .center) {
+                    Image(systemName: "arrow.up.arrow.down")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 8)
+                        .offset(y: 2)
+                        .fontWeight(.semibold)
+                }
+                .foregroundColor(userData.user == nil ? .gray : .primary)
+        }
+        .overlay(alignment: .topTrailing) {
+            let alertCount = userData.sharedMultiList.filter({ $0.shareResult == .undetermined }).count
+            if (userData.user != nil && alertCount > 0) || userData.user == nil {
+                ZStack {
+                    Circle().fill(Color.red)
+                    Text("\(userData.user != nil ? alertCount : sampleShareMulti.count)")
+                        .foregroundColor(.white)
+                        .font(.caption)
+                        .padding(2)
+                }
+                .frame(width: 18)
+                .offset(x: 4, y: -2)
+            }
+        }
+    }
+    
+
 }
 
 struct HomeView_Previews: PreviewProvider {
