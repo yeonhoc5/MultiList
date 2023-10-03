@@ -59,11 +59,12 @@ struct MultiListApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     let persistenceController = PersistenceController.shared
     
+//    @StateObject var viewmodel = CheckListViewModel(checkList: sampleCheckList)
+    
     var body: some Scene {
         WindowGroup {
-//            ContentView()
             HomeView()
-//            OrientationView()
+                .environmentObject(UserData())
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
                 .onOpenURL(perform: { url in
                     if (AuthApi.isKakaoTalkLoginUrl(url)) {

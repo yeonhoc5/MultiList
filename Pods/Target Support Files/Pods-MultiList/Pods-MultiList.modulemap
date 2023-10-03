@@ -1,0 +1,6 @@
+framework module Pods_MultiList {
+  umbrella header "Pods-MultiList-umbrella.h"
+
+  export *
+  module * { export * }
+}

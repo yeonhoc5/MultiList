@@ -12,42 +12,80 @@ struct OStack<Content>: View where Content: View {
     let spacing: CGFloat?
     let isVerticalFirst: Bool
     let content: () -> Content
-
+    
     @State private var orientation = UIDevice.current.orientation
-
-    init(alignment: Alignment = .center, spacing: CGFloat? = nil, isVerticalFirst: Bool = true,
-    @ViewBuilder content: @escaping () -> Content) {
-           self.alignment = alignment
-           self.spacing = spacing
-           self.isVerticalFirst = isVerticalFirst
-           self.content = content
-       }
+    @State private var current: UIDeviceOrientation = .portrait
+    @State private var beforeOrientation: UIDeviceOrientation = .portrait
+    
+    init(alignment: Alignment = .center, spacing: CGFloat? = nil, isVerticalFirst: Bool = true, @ViewBuilder content: @escaping () -> Content) {
+        self.alignment = alignment
+        self.spacing = spacing
+        self.isVerticalFirst = isVerticalFirst
+        self.content = content
+        if orientation.isValidInterfaceOrientation {
+            current = orientation
+        }
+   }
 
     var body: some View {
         Group {
             if isVerticalFirst {
-                if orientation.isLandscape {
+                if orientation.isPortrait {
+                    VStack(alignment: alignment.horizontal,
+                           spacing: spacing,
+                           content: content)
+                } else if orientation.isLandscape {
                     HStack(alignment: alignment.vertical,
                            spacing: spacing,
                            content: content)
                 } else {
-                    VStack(alignment: alignment.horizontal,
-                           spacing: spacing,
-                           content: content)
+                    if self.beforeOrientation == .portrait {
+                        VStack(alignment: alignment.horizontal,
+                               spacing: spacing,
+                               content: content)
+                    } else {
+                        HStack(alignment: alignment.vertical,
+                               spacing: spacing,
+                               content: content)
+                    }
                 }
             } else {
-                if !orientation.isLandscape {
+                if orientation.isPortrait {
                     HStack(alignment: alignment.vertical,
                            spacing: spacing,
                            content: content)
-                } else {
+                } else if orientation.isLandscape {
                     VStack(alignment: alignment.horizontal,
                            spacing: spacing,
                            content: content)
+                } else  {
+                    if self.beforeOrientation == .portrait {
+                        HStack(alignment: alignment.vertical,
+                               spacing: spacing,
+                               content: content)
+                    } else {
+                        VStack(alignment: alignment.horizontal,
+                               spacing: spacing,
+                               content: content)
+                    }
                 }
             }
         }
         .detectOrientation($orientation)
+        .onChange(of: orientation) { newValue in
+            if newValue.isValidInterfaceOrientation {
+                self.beforeOrientation = newValue
+            }
+            
+//            if newValue.isPortrait {
+//                print("beforeOrientation setted Portrait")
+//                beforeOrientation = newValue
+//            } else if newValue.isLandscape {
+//                print("beforeOrientation setted Landscape")
+//                beforeOrientation = .landscapeLeft
+//            }
+            
+        }
     }
 
   enum Alignment {

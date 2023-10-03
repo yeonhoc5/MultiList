@@ -10,13 +10,14 @@ import FirebaseRemoteConfig
 import FirebaseFirestore
 
 class HomeViewModel: ObservableObject {
-    @Published var user: UserModel! {
-        didSet {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                self.isShowingProgressView = false
-            }
-        }
-    }
+    
+//    @Published var user: UserModel! {
+//        didSet {
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+//                self.isShowingProgressView = false
+//            }
+//        }
+//    }
     @Published var isShowingProgressView: Bool = false
     
     // 홈 알럿 프라퍼티
@@ -24,26 +25,15 @@ class HomeViewModel: ObservableObject {
     var message: String = "non"
     @Published var isShowingAlert: Bool = false
     
+    var isVertical: Bool {
+        return screenSize.width < screenSize.height
+    }
+    
+    
     init() {
         Task {
             try await checkRemoteConfig()
         }
-        addNotificationObserverToUser()
-    }
-    
-    func addNotificationObserverToUser() {
-        _ = NotificationCenter.default.addObserver(forName: Notification.Name("userSetted"), object: nil, queue: .main, using: { notification in
-            print("홈뷰: 노티피케이션 수신 완료")
-            let user = notification.object as? UserModel
-            self.user = user
-        })
-//
-        _ = NotificationCenter.default.addObserver(forName: Notification.Name("progressView"), object: nil, queue: .main, using: { _ in
-            DispatchQueue.main.async {
-                self.isShowingProgressView = true
-            }
-        })
-        
     }
     
     func checkRemoteConfig() async throws {
