@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Lottie
 
 extension View {
     
@@ -52,7 +53,9 @@ extension View {
         Rectangle()
             .fill(Color.primaryInverted.opacity(0.7))
             .onTapGesture {
-                tapActioin()
+                withAnimation {
+                    tapActioin()
+                }
             }
     }
     
@@ -63,14 +66,19 @@ extension View {
     }
     
     
-    func loadingView(color: Color) -> some View {
+    func loadingView(color: Color! = Color.gray, onAppear: @escaping () -> Void) -> some View {
         RoundedRectangle(cornerRadius: 5)
-            .foregroundColor(color)
+            .foregroundStyle(color)
             .overlay {
-                Text("Loading...")
-                    .foregroundColor(.white.opacity(0.5))
-                    .font(.caption)
-                    .padding(.bottom, 10)
+                LottieView(animation: .named("LoadingImage"))
+                    .playing(loopMode: .loop)
+//                Text("Loading...")
+//                    .foregroundColor(.white)
+//                    .font(.caption)
+                    .padding([.bottom, .horizontal], 10)
+            }
+            .onAppear {
+                onAppear()
             }
     }
     
@@ -78,5 +86,38 @@ extension View {
         RoundedRectangle(cornerRadius: radius)
             .foregroundColor(color)
     }
+    
+    
+    func minusMark(width: CGFloat) -> some View {
+        BlurView(style: .systemChromeMaterialLight)
+            .clipShape(Circle())
+            .overlay(content: {
+                Image(systemName: "minus")
+                    .resizable()
+                    .scaledToFit()
+                    .foregroundStyle(Color.black)
+                    .fontWeight(.semibold)
+                    .padding(5)
+            })
+            .frame(width: width / 4, height: width / 4)
+            .clipped()
+            .offset(x: -5, y: -5)
+            .shadow(color: .black, radius: 2, x: 1, y: 1)
+    }
+
+//    func snapshot() -> UIImage {
+//        let controller = UIHostingController(rootView: self)
+//        let view = controller.view
+//
+//        let targetSize = controller.view.intrinsicContentSize
+//        view?.bounds = CGRect(origin: .zero, size: targetSize)
+//        view?.backgroundColor = .clear
+//
+//        let renderer = UIGraphicsImageRenderer(size: targetSize)
+//
+//        return renderer.image { _ in
+//            view?.drawHierarchy(in: controller.view.bounds, afterScreenUpdates: true)
+//        }
+//    }
     
 }
