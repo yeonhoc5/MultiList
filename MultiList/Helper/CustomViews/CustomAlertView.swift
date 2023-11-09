@@ -28,25 +28,31 @@ struct CustomAlertView: View {
                         TextField(text.count == 0 ? placeHolder : text, text: $text)
                             .padding(.horizontal, 5)
                     }
+                    .foregroundStyle(Color.black)
                 }
                 .frame(height: 40)
                 HStack(alignment: .top) {
                     Text("URL")
                         .frame(width: 40)
-                    TextEditor(text: $textEditor)
-                        .frame(height: 100)
-                        .cornerRadius(5)
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 5).fill(Color.white)
+                        TextEditor(text: $textEditor)
+                            .scrollContentBackground(.hidden)
+                            .cornerRadius(5)
+                    }
+                    .frame(height: 100)
+                    .foregroundStyle(Color.black)
                 }
                 .padding(.bottom, 10)
                 
                 HStack {
                     buttonLogin(title: "취소", btncolor: .teal, textColor: .black) {
-                        text = ""
-                        textEditor = ""
+                        returnNIl()
                         self.isShowingAlert = false
                     }
                     buttonLogin(title: "확인", btncolor: .teal, textColor: .black) {
                         action()
+                        returnNIl()
                         self.isShowingAlert = false
                     }
                 }
@@ -56,12 +62,16 @@ struct CustomAlertView: View {
             .frame(width: 300)
             .background {
                 BlurView(style: .prominent)
-                    .blur(radius: 4)
-                BlurView(style: .prominent)
+//                    .shadow(color: .black, radius: 1, x: 0, y: 0)
             }
             .cornerRadius(20)
-        
     }
+    
+    func returnNIl() {
+        text = ""
+        textEditor = ""
+    }
+    
 }
 
 struct CustomAlertView_Previews: PreviewProvider {

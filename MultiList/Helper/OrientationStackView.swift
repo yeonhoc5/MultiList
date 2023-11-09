@@ -9,17 +9,26 @@ import SwiftUI
 
 struct OStack<Content>: View where Content: View {
     let alignment: Alignment
-    let spacing: CGFloat?
+    let verticalSpacing: CGFloat?
+    let horizontalSpacing: CGFloat?
     let isVerticalFirst: Bool
     let content: () -> Content
     
     @State private var orientation = UIDevice.current.orientation
     @State private var current: UIDeviceOrientation = .portrait
-    @State private var beforeOrientation: UIDeviceOrientation = .portrait
     
-    init(alignment: Alignment = .center, spacing: CGFloat? = nil, isVerticalFirst: Bool = true, @ViewBuilder content: @escaping () -> Content) {
+    @State var isChanged: Bool = false
+    
+    init(alignment: Alignment = .center, verticalSpacing: CGFloat? = nil, horizontalSpacing: CGFloat? = nil, spacing: CGFloat? = nil, isVerticalFirst: Bool = true, @ViewBuilder content: @escaping () -> Content) {
         self.alignment = alignment
-        self.spacing = spacing
+        
+        if verticalSpacing == nil && horizontalSpacing == nil {
+            self.verticalSpacing = spacing
+            self.horizontalSpacing = spacing
+        } else {
+            self.verticalSpacing = verticalSpacing
+            self.horizontalSpacing = horizontalSpacing
+        }
         self.isVerticalFirst = isVerticalFirst
         self.content = content
         if orientation.isValidInterfaceOrientation {
@@ -30,61 +39,39 @@ struct OStack<Content>: View where Content: View {
     var body: some View {
         Group {
             if isVerticalFirst {
-                if orientation.isPortrait {
+                if current.isPortrait {
                     VStack(alignment: alignment.horizontal,
-                           spacing: spacing,
+                           spacing: verticalSpacing,
                            content: content)
-                } else if orientation.isLandscape {
+                } else if current.isLandscape  {
                     HStack(alignment: alignment.vertical,
-                           spacing: spacing,
+                           spacing: horizontalSpacing,
                            content: content)
-                } else {
-                    if self.beforeOrientation == .portrait {
-                        VStack(alignment: alignment.horizontal,
-                               spacing: spacing,
-                               content: content)
-                    } else {
-                        HStack(alignment: alignment.vertical,
-                               spacing: spacing,
-                               content: content)
-                    }
                 }
             } else {
-                if orientation.isPortrait {
+                if current.isPortrait {
                     HStack(alignment: alignment.vertical,
-                           spacing: spacing,
+                           spacing: horizontalSpacing,
                            content: content)
-                } else if orientation.isLandscape {
+                } else if current.isLandscape  {
                     VStack(alignment: alignment.horizontal,
-                           spacing: spacing,
+                           spacing: verticalSpacing,
                            content: content)
-                } else  {
-                    if self.beforeOrientation == .portrait {
-                        HStack(alignment: alignment.vertical,
-                               spacing: spacing,
-                               content: content)
-                    } else {
-                        VStack(alignment: alignment.horizontal,
-                               spacing: spacing,
-                               content: content)
-                    }
                 }
             }
         }
         .detectOrientation($orientation)
+        .onAppear(perform: {
+            if orientation.isValidInterfaceOrientation {
+                self.current = self.orientation
+                self.isChanged = true
+            }
+        })
         .onChange(of: orientation) { newValue in
             if newValue.isValidInterfaceOrientation {
-                self.beforeOrientation = newValue
+                self.current = newValue
+                self.isChanged = true
             }
-            
-//            if newValue.isPortrait {
-//                print("beforeOrientation setted Portrait")
-//                beforeOrientation = newValue
-//            } else if newValue.isLandscape {
-//                print("beforeOrientation setted Landscape")
-//                beforeOrientation = .landscapeLeft
-//            }
-            
         }
     }
 

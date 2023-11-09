@@ -50,7 +50,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             return false
         }
     }
-    
 }
 
 
@@ -58,8 +57,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 struct MultiListApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     let persistenceController = PersistenceController.shared
-    
-//    @StateObject var viewmodel = CheckListViewModel(checkList: sampleCheckList)
     
     var body: some Scene {
         WindowGroup {

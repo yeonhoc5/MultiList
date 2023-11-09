@@ -7,7 +7,59 @@
 
 import SwiftUI
 
+enum CustomButtonType {
+    case text
+    case image
+    case textAndImage
+}
+
 extension View {
+    
+    func buttonRectangle(type: CustomButtonType = .text,
+                         backgroundColor: Color = .white,
+                         foregroundColor: Color = .black,
+                         text: String = "",
+                         image: String = "",
+                         font: Font = .headline,
+                         fontWeight: Font.Weight = .semibold,
+                         cornerRadius: CGFloat = 5,
+                         scale: CGFloat = 0.9,
+                         height: CGFloat = 50,
+                         action: @escaping () -> Void) -> some View {
+        Button(action: {
+            action()
+        }, label: {
+            ZStack {
+                RoundedRectangle(cornerRadius: cornerRadius)
+                    .foregroundColor(backgroundColor)
+                Group {
+                    switch type {
+                    case .text:
+                        Text(text)
+                            .font(font)
+                            .fontWeight(fontWeight)
+                    case .image:
+                        Image(systemName: image)
+                            .imageScale(.large)
+                    case .textAndImage:
+                        HStack {
+                            Text(text)
+                                .font(font)
+                                .fontWeight(fontWeight)
+                            Spacer()
+                            Image(systemName: image)
+                                .imageScale(.large)
+                        }
+                    }
+                }
+                .foregroundStyle(foregroundColor)
+                .padding(10)
+            }
+            .frame(height: height)
+        })
+        .buttonStyle(ScaleEffect(scale: scale))
+    }
+    
     // home > LoginView (with Image)
     func buttonLogin(image: String,
                      backgroundColor: Color = .white,
@@ -41,6 +93,7 @@ extension View {
                     .font(.headline)
                     .foregroundColor(textColor)
                     .fontWeight(.black)
+                    .multilineTextAlignment(.center)
             }
         }
         .buttonStyle(ScaleEffect(scale: 0.9))
@@ -98,4 +151,6 @@ extension View {
         .frame(maxWidth: 200, maxHeight: 250)
         
     }
+    
+    
 }

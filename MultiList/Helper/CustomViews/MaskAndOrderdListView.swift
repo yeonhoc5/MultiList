@@ -27,6 +27,8 @@ struct MaskAndOrderdListView<Element, RowContent: View>: View where Element: Ide
     @Binding var editMode: EditMode
     
     @State var notHere: Bool = false
+    @State var lastColor: Color = .numberingGray
+    
     public init(items: [Element],
                 editMode: Binding<EditMode>,
                 rowContent: @escaping (Element) -> RowContent,
@@ -57,24 +59,20 @@ struct MaskAndOrderdListView<Element, RowContent: View>: View where Element: Ide
         Group {
             if items.count > 0 {
                 ZStack {
-                    listMaskView(color: .white, radius: 10)
-                    List {
-                        ForEach(items) { item in
-                            eachRowView(item: item)
-                                .offset(x: editMode == .active ? -38 : 0)
-                                .overlay(alignment: .trailing, content: {
-                                    if editMode == .active {
-                                        Image(systemName: "pencil.circle.fill")
-                                            .foregroundColor(.teal)
-                                            .imageScale(.large)
-                                            .opacity(editMode == .active ? 1 : 0)
-                                    }
-                                })
-                                .onTapGesture(perform: {
-                                    onTapAction(item)
-                                })
-                                .foregroundColor(.black)
-                                .listRowBackground(Color.white)
+                    listMaskView(color: .white, radius: 5)
+                    ScrollViewReader { proxy in
+                        List {
+                            ForEach(items) { item in
+                                eachRowView(item: item, lastColor: lastColor)
+                                    .id(items.firstIndex(where: {$0.id == item.id}))
+                                    .offset(x: editMode == .active ? -40 : 0)
+                                    .onTapGesture(perform: {
+                                        onTapAction(item)
+                                    })
+                                    .accentColor(.red)
+                                    .foregroundColor(.black)
+                                    .listRowBackground(Color.white)
+                                    .accentColor(Color.red)
                             }
                             .onMove { indexSet, int in
                                 onMoveAction(indexSet, int)
@@ -82,14 +80,41 @@ struct MaskAndOrderdListView<Element, RowContent: View>: View where Element: Ide
                             .onDelete { indexSet in
                                 onDeleteAction(indexSet)
                             }
+                            Rectangle().fill(.white)
+                                .id("listView")
+                                .frame(height: 100)
+                                .listRowSeparator(.hidden)
+                                .listRowBackground(Color.white)
+                        }
+                        .onChange(of: items.count, perform: { [old = items.count] new in
+                            withAnimation {
+                                if new > old {
+                                    proxy.scrollTo("listView", anchor: .top)
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                                        withAnimation {
+                                            lastColor = .numberingGray
+                                        }
+                                    }
+                                }
+                            }
+                        })
+                        .listStyle(.plain)
+                        .environment(\.editMode, $editMode)
+                        .onAppear {
+                            if items.count == 1 {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                                    withAnimation {
+                                        lastColor = .numberingGray
+                                    }
+                                }
+                            }
+                        }
                     }
-                    .listStyle(.plain)
-                    .environment(\.editMode, $editMode)
                 }
-                .padding(20)
+                .padding(15)
                 .mask {
-                    listMaskView(color: .white, radius: 10)
-                        .padding(20)
+                    listMaskView(color: .white, radius: 5)
+                        .padding(15)
                 }
                 .shadow(color: .black, radius: 1, x: 0, y: 0)
             } else {
@@ -108,24 +133,48 @@ struct MaskAndOrderdListView<Element, RowContent: View>: View where Element: Ide
         }
         .ignoresSafeArea(.keyboard, edges: .bottom)
         .overlay(alignment: .bottomLeading) {
-            AddButton(width: screenSize.width,
-                      placeHolder: addBttnPlaceHolder,
-                      isPresented: $isPresentAddBttn,
-                      string: $bindingString,
-                      isFocused: $isFocused) {
-                addBttnAction()
+            if editMode != .active {
+                AddButton(width: screenSize.width,
+                          placeHolder: addBttnPlaceHolder,
+                          isPresented: $isPresentAddBttn,
+                          string: $bindingString,
+                          isFocused: $isFocused) {
+                    addBttnAction()
+                    self.lastColor = .colorSet[Int.random(in: 0..<Color.colorSet.count)]
+                }
+                          .padding(.horizontal, 10)
+                          .transition(.move(edge: screenSize.width < screenSize.height ? .leading : .bottom).combined(with: .opacity))
             }
-                      .padding(.horizontal, 10)
         }
     }
     
-    func eachRowView(item: Element) -> some View {
-        rowContent(item)
-            .padding(.leading, 35)
-            .background(alignment: .leading) {
-                if let index = items.firstIndex(where: {$0.id == item.id}) {
+    func eachRowView(item: Element, lastColor: Color) -> some View {
+        ZStack(alignment: .leading) {
+            Rectangle().fill(.white)
+                .overlay(alignment: .trailing, content: {
+//                    if editMode == .active {
+                        Image(systemName: "pencil.circle.fill")
+                            .foregroundColor(.teal)
+                            .imageScale(.large)
+                            .opacity(editMode == .active ? 1 : 0)
+//                    }
+                })
+            rowContent(item)
+        }
+        .overlay(alignment: .trailing) {
+            if editMode == .active {
+                Image(systemName: "line.3.horizontal")
+                    .imageScale(.large)
+                    .offset(x: 33)
+                    .transition(.push(from: .trailing))
+            }
+        }
+        .padding(.leading, editMode == .active ? 0 : 40)
+        .offset(x: editMode == .active ? 40 : 0)
+        .background(alignment: .leading) {
+            if let index = items.firstIndex(where: {$0.id == item.id}) {
                     Text(index < 9 ? "0\(index + 1)" : "\(index + 1)")
-                        .foregroundStyle(Color.numberingGray)
+                        .foregroundStyle(index == self.items.count-1 ? lastColor : .numberingGray)
                         .font(Font.system(size: 50, weight: .black, design: .monospaced))
                         .italic()
                         .kerning(-5)

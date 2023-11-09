@@ -78,7 +78,7 @@ extension View {
     
     var nowMark: some View {
         Text("now")
-            .foregroundColor(.black)
+            .foregroundColor(.teal)
             .font(.caption).fontWeight(.heavy)
             .offset(y: -15)
     }
