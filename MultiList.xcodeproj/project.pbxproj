@@ -95,6 +95,8 @@
 		1A90580E2ADCC6DE0030F990 /* FirebaseRemoteConfigSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 1A90580D2ADCC6DE0030F990 /* FirebaseRemoteConfigSwift */; };
 		1A9058102ADCC6DE0030F990 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 1A90580F2ADCC6DE0030F990 /* FirebaseStorage */; };
 		1A9058122ADCC6DE0030F990 /* FirebaseStorageCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = 1A9058112ADCC6DE0030F990 /* FirebaseStorageCombine-Community */; };
+		1AA465EB2B60A2F0009CDB88 /* ApiKeyInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1AA465EA2B60A2F0009CDB88 /* ApiKeyInfo.plist */; };
+		1AA465ED2B60A5B2009CDB88 /* MultiList++Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA465EC2B60A5B2009CDB88 /* MultiList++Bundle.swift */; };
 		1AB818612AFB49F300C8D69D /* NotYetFriendListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB818602AFB49F300C8D69D /* NotYetFriendListView.swift */; };
 		1AB818642AFB4A2000C8D69D /* NotYetFriendListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AB818632AFB4A2000C8D69D /* NotYetFriendListViewModel.swift */; };
 		1ABC924D2AD3CFFA0033E95C /* ContentTitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ABC924C2AD3CFFA0033E95C /* ContentTitleView.swift */; };
@@ -203,6 +205,8 @@
 		1A8412622A860C3A00BD1BF5 /* UserSettingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingViewModel.swift; sourceTree = "<group>"; };
 		1A8412642A860D8300BD1BF5 /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
 		1A84641A2ADCCF30006B08E8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		1AA465EA2B60A2F0009CDB88 /* ApiKeyInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = ApiKeyInfo.plist; sourceTree = "<group>"; };
+		1AA465EC2B60A5B2009CDB88 /* MultiList++Bundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MultiList++Bundle.swift"; sourceTree = "<group>"; };
 		1AB818602AFB49F300C8D69D /* NotYetFriendListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotYetFriendListView.swift; sourceTree = "<group>"; };
 		1AB818632AFB4A2000C8D69D /* NotYetFriendListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotYetFriendListViewModel.swift; sourceTree = "<group>"; };
 		1ABC924C2AD3CFFA0033E95C /* ContentTitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentTitleView.swift; sourceTree = "<group>"; };
@@ -450,6 +454,9 @@
 			children = (
 				1A84124B2A80CEFA00BD1BF5 /* MultiList.entitlements */,
 				1A8412402A8097DB00BD1BF5 /* Info.plist */,
+				1A84641A2ADCCF30006B08E8 /* GoogleService-Info.plist */,
+				1AA465EA2B60A2F0009CDB88 /* ApiKeyInfo.plist */,
+				1AA465EC2B60A5B2009CDB88 /* MultiList++Bundle.swift */,
 				1A704C642A806FE800CBEF26 /* MultiListApp.swift */,
 				1A704C662A806FE800CBEF26 /* ContentView.swift */,
 				1AE1B0122AD6805D00CAE358 /* Scenes */,
@@ -464,7 +471,6 @@
 				1AE1B0102AD6710A00CAE358 /* NetworkMonitor.swift */,
 				1A704C682A806FE800CBEF26 /* Assets.xcassets */,
 				1A704C6D2A806FE800CBEF26 /* Persistence.swift */,
-				1A84641A2ADCCF30006B08E8 /* GoogleService-Info.plist */,
 				1A704C6F2A806FE800CBEF26 /* MultiList.xcdatamodeld */,
 				1A704C6A2A806FE800CBEF26 /* Preview Content */,
 			);
@@ -813,6 +819,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1A6DF2DC2AD7D80000775203 /* LoginCardBackground3.json in Resources */,
+				1AA465EB2B60A2F0009CDB88 /* ApiKeyInfo.plist in Resources */,
 				1A704C6C2A806FE800CBEF26 /* Preview Assets.xcassets in Resources */,
 				1A704C692A806FE800CBEF26 /* Assets.xcassets in Resources */,
 				1A6DF2DA2AD7D7CE00775203 /* LoginCardBackground2.json in Resources */,
@@ -944,6 +951,7 @@
 				1A8412652A860D8300BD1BF5 /* UserModel.swift in Sources */,
 				1AF113F02A949FB00098C87F /* CheckListImge.swift in Sources */,
 				1A704C6E2A806FE800CBEF26 /* Persistence.swift in Sources */,
+				1AA465ED2B60A5B2009CDB88 /* MultiList++Bundle.swift in Sources */,
 				1A4E7F942A91D9A40009D0B6 /* CheckListModel.swift in Sources */,
 				1AF114042A9F00350098C87F /* CustomAlertView.swift in Sources */,
 				1A704C712A806FE800CBEF26 /* MultiList.xcdatamodeld in Sources */,

@@ -19,7 +19,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
       // 1. firebase 초기화
       FirebaseApp.configure()
       // 2. 카카오 인증 초기화
-      KakaoSDK.initSDK(appKey: "291aa22306bb5331561ca6af5b6c34b1")
+      KakaoSDK.initSDK(appKey: Bundle.main.kakao)
       // 3. 네이버 인증 활성화 (1.네이버 앱에서 인증 -> 2.사파리에서 인증)
       NaverThirdPartyLoginConnection.getSharedInstance().isNaverAppOauthEnable = true
       NaverThirdPartyLoginConnection.getSharedInstance().isInAppOauthEnable = true

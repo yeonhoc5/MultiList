@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct MaskAndOrderdListView<Element, RowContent: View>: View where Element: Identifiable {
+    
     let items: [Element]
     private let rowContent: (Element) -> RowContent
     
@@ -15,9 +16,11 @@ struct MaskAndOrderdListView<Element, RowContent: View>: View where Element: Ide
     private let onMoveAction: (_: IndexSet, _: Int) -> Void
     private let onDeleteAction: (_: IndexSet) -> Void
     
+    // blutView
     var isPresentBlurView: Bool
     let blurViewTapAction: () -> Void
     
+    // add button
     @Binding var isPresentAddBttn: Bool
     let addBttnPlaceHolder: String
     @Binding var bindingString: String
@@ -25,7 +28,6 @@ struct MaskAndOrderdListView<Element, RowContent: View>: View where Element: Ide
     let addBttnAction: () -> Void
     
     @Binding var editMode: EditMode
-    
     @State var notHere: Bool = false
     @State var lastColor: Color = .numberingGray
     
@@ -197,7 +199,7 @@ struct MaskAndOrderedListView_Previews: PreviewProvider {
             print("deleted", indexSet)
         }, isPresentBlurView: false, blurViewTapAction: {
             
-        }, isPresentAddBttn: .constant(true), addBttnPlaceHolder: "추가할 리스트", bindingStirng: .constant("")) {
+        }, isPresentAddBttn: .constant(false), addBttnPlaceHolder: "추가할 리스트", bindingStirng: .constant("")) {
                 
         }
     }
